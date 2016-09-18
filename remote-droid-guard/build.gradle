@@ -32,6 +32,12 @@ android {
         versionName getMyVersionName()
         versionCode getMyVersionCode()
     }
+
+    sourceSets {
+        main {
+            java.srcDirs += 'src/main/protos-java'
+        }
+    }
 }
 
 if (file('user.gradle').exists()) {

@@ -1,0 +1,36 @@
+option java_package = "org.microg.gms.droidguard";
+
+message DGUsage {
+    optional string type = 1;
+    optional string packageName = 2;
+}
+
+message KeyValuePair {
+    optional string key = 1;
+    optional string val = 2;
+}
+
+message DGRequest {
+    optional DGUsage usage = 1;
+    repeated KeyValuePair info = 2;
+    optional string versionNamePrefix = 3;
+    optional bool hasAccount = 6;
+    optional bool isGoogleCn = 7;
+    optional bool someTrue = 8;
+    repeated bytes cached = 9;
+    optional int32 currentVersion = 13;
+    optional string arch = 14;
+}
+
+message SignedDGResponse {
+    optional bytes data = 1;
+    optional bytes sig = 2;
+}
+
+message DGResponse {
+    optional bytes byteCode = 1;
+    optional string vmUrl = 2;
+    optional bytes vmChecksum = 3;
+    optional int32 expiryTimeSecs = 4;
+    optional bytes content = 5;
+}
