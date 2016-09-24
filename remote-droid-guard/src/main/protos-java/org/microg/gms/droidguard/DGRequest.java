@@ -20,7 +20,7 @@ public final class DGRequest extends Message {
   public static final String DEFAULT_VERSIONNAMEPREFIX = "";
   public static final Boolean DEFAULT_HASACCOUNT = false;
   public static final Boolean DEFAULT_ISGOOGLECN = false;
-  public static final Boolean DEFAULT_SOMETRUE = false;
+  public static final Boolean DEFAULT_ENABLEINLINEVM = false;
   public static final List<ByteString> DEFAULT_CACHED = Collections.emptyList();
   public static final Integer DEFAULT_CURRENTVERSION = 0;
   public static final String DEFAULT_ARCH = "";
@@ -41,7 +41,7 @@ public final class DGRequest extends Message {
   public final Boolean isGoogleCn;
 
   @ProtoField(tag = 8, type = BOOL)
-  public final Boolean someTrue;
+  public final Boolean enableInlineVm;
 
   @ProtoField(tag = 9, type = BYTES, label = REPEATED)
   public final List<ByteString> cached;
@@ -52,20 +52,20 @@ public final class DGRequest extends Message {
   @ProtoField(tag = 14, type = STRING)
   public final String arch;
 
-  public DGRequest(DGUsage usage, List<KeyValuePair> info, String versionNamePrefix, Boolean hasAccount, Boolean isGoogleCn, Boolean someTrue, List<ByteString> cached, Integer currentVersion, String arch) {
+  public DGRequest(DGUsage usage, List<KeyValuePair> info, String versionNamePrefix, Boolean hasAccount, Boolean isGoogleCn, Boolean enableInlineVm, List<ByteString> cached, Integer currentVersion, String arch) {
     this.usage = usage;
     this.info = immutableCopyOf(info);
     this.versionNamePrefix = versionNamePrefix;
     this.hasAccount = hasAccount;
     this.isGoogleCn = isGoogleCn;
-    this.someTrue = someTrue;
+    this.enableInlineVm = enableInlineVm;
     this.cached = immutableCopyOf(cached);
     this.currentVersion = currentVersion;
     this.arch = arch;
   }
 
   private DGRequest(Builder builder) {
-    this(builder.usage, builder.info, builder.versionNamePrefix, builder.hasAccount, builder.isGoogleCn, builder.someTrue, builder.cached, builder.currentVersion, builder.arch);
+    this(builder.usage, builder.info, builder.versionNamePrefix, builder.hasAccount, builder.isGoogleCn, builder.enableInlineVm, builder.cached, builder.currentVersion, builder.arch);
     setBuilder(builder);
   }
 
@@ -79,7 +79,7 @@ public final class DGRequest extends Message {
         && equals(versionNamePrefix, o.versionNamePrefix)
         && equals(hasAccount, o.hasAccount)
         && equals(isGoogleCn, o.isGoogleCn)
-        && equals(someTrue, o.someTrue)
+        && equals(enableInlineVm, o.enableInlineVm)
         && equals(cached, o.cached)
         && equals(currentVersion, o.currentVersion)
         && equals(arch, o.arch);
@@ -94,7 +94,7 @@ public final class DGRequest extends Message {
       result = result * 37 + (versionNamePrefix != null ? versionNamePrefix.hashCode() : 0);
       result = result * 37 + (hasAccount != null ? hasAccount.hashCode() : 0);
       result = result * 37 + (isGoogleCn != null ? isGoogleCn.hashCode() : 0);
-      result = result * 37 + (someTrue != null ? someTrue.hashCode() : 0);
+      result = result * 37 + (enableInlineVm != null ? enableInlineVm.hashCode() : 0);
       result = result * 37 + (cached != null ? cached.hashCode() : 1);
       result = result * 37 + (currentVersion != null ? currentVersion.hashCode() : 0);
       result = result * 37 + (arch != null ? arch.hashCode() : 0);
@@ -110,7 +110,7 @@ public final class DGRequest extends Message {
     public String versionNamePrefix;
     public Boolean hasAccount;
     public Boolean isGoogleCn;
-    public Boolean someTrue;
+    public Boolean enableInlineVm;
     public List<ByteString> cached;
     public Integer currentVersion;
     public String arch;
@@ -126,7 +126,7 @@ public final class DGRequest extends Message {
       this.versionNamePrefix = message.versionNamePrefix;
       this.hasAccount = message.hasAccount;
       this.isGoogleCn = message.isGoogleCn;
-      this.someTrue = message.someTrue;
+      this.enableInlineVm = message.enableInlineVm;
       this.cached = copyOf(message.cached);
       this.currentVersion = message.currentVersion;
       this.arch = message.arch;
@@ -157,8 +157,8 @@ public final class DGRequest extends Message {
       return this;
     }
 
-    public Builder someTrue(Boolean someTrue) {
-      this.someTrue = someTrue;
+    public Builder enableInlineVm(Boolean enableInlineVm) {
+      this.enableInlineVm = enableInlineVm;
       return this;
     }
 

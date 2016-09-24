@@ -16,7 +16,7 @@ message DGRequest {
     optional string versionNamePrefix = 3;
     optional bool hasAccount = 6;
     optional bool isGoogleCn = 7;
-    optional bool someTrue = 8;
+    optional bool enableInlineVm = 8;
     repeated bytes cached = 9;
     optional int32 currentVersion = 13;
     optional string arch = 14;

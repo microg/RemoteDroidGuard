@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="org.microg.dgtest"
+<manifest package="org.microg.gms.droidguard"
           xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-sdk
+        android:minSdkVersion="19"
+        android:targetSdkVersion="23"/>
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
-    <uses-sdk
-        android:minSdkVersion="9"
-        android:targetSdkVersion="23"/>
-
     <application
-        android:allowBackup="true"
-        android:label="microG DroidGuard Helper">
-
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_core_service_app"
+        android:label="@string/droidguard_app_name">
         <service
-            android:name="org.microg.gms.droidguard.RemoteDroidGuardService"
+            android:name=".RemoteDroidGuardService"
             android:enabled="true"
             android:exported="true"
-            android:permission="android.permission.INTERNET">
+            android:permission="android.permission.INTERNET"
+            android:process="com.google.android.gms.unstable">
+            <intent-filter>
+                <action android:name="org.microg.gms.droidguard.REMOTE"/>
+            </intent-filter>
         </service>
     </application>
 

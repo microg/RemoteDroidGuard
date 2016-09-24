@@ -14,30 +14,10 @@
  * limitations under the License.
  */
 
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.0'
-    }
-}
+package org.microg.gms.droidguard;
 
-allprojects {
-    apply plugin: 'idea'
-    ext.androidBuildVersionTools = "24.0.2"
-    ext.isReleaseVersion = false
-}
-
-def androidCompileSdk() { return 24 }
-
-def androidTargetSdk() { return 24 }
-
-def androidMinSdk() { return 10 }
-
-subprojects {
-    group = 'org.microg'
-    repositories {
-        jcenter()
-    }
+public class Constants {
+    public static final String GMS_PACKAGE_NAME = "com.google.android.gms";
+    public static final int GMS_VERSION_CODE = 9683430;
+    public static final String GMS_VERSION_NAME_PREFIX = "9.6.83 (430-";
 }

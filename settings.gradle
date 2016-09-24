@@ -1,1 +1,2 @@
 include ':remote-droid-guard'
+include ':remote-droid-guard-lib'

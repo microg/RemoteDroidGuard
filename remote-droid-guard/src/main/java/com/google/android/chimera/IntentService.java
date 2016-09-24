@@ -14,30 +14,41 @@
  * limitations under the License.
  */
 
-buildscript {
-    repositories {
-        jcenter()
+package com.google.android.chimera;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.IBinder;
+
+public abstract class IntentService extends Service {
+
+    public IntentService(Context base) {
+        super(base);
     }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.0'
+
+    public IBinder onBind(Intent intent) {
+        return null;
     }
-}
 
-allprojects {
-    apply plugin: 'idea'
-    ext.androidBuildVersionTools = "24.0.2"
-    ext.isReleaseVersion = false
-}
+    public void onCreate() {
 
-def androidCompileSdk() { return 24 }
+    }
 
-def androidTargetSdk() { return 24 }
+    public void onDestroy() {
 
-def androidMinSdk() { return 10 }
+    }
 
-subprojects {
-    group = 'org.microg'
-    repositories {
-        jcenter()
+    public abstract void onHandleIntent(Intent intent);
+
+    public void onStart(Intent intent, int i) {
+
+    }
+
+    public int onStartCommand(Intent intent, int a, int b) {
+        return 0;
+    }
+
+    public void setIntentRedelivery(boolean bool) {
+
     }
 }
