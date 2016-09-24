@@ -47,6 +47,14 @@ android {
             java.srcDirs += 'src/main/protos-java'
         }
     }
+
+    productFlavors {
+        "default" {
+            ndk {
+                abiFilters "armeabi", "armeabi-v7a", "arm64-v8a"
+            }
+        }
+    }
 }
 
 if (file('user.gradle').exists()) {
