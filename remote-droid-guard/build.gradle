@@ -8,8 +8,9 @@ repositories {
 
 dependencies {
     compile 'com.squareup.wire:wire-runtime:1.6.1'
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile ':droidguasso:@jar'
     compile ':arthook:@aar'
+    provided ':XposedBridgeApi:54@jar'
     compile project(':remote-droid-guard-lib')
 }
 
@@ -45,14 +46,6 @@ android {
     sourceSets {
         main {
             java.srcDirs += 'src/main/protos-java'
-        }
-    }
-
-    productFlavors {
-        "default" {
-            ndk {
-                abiFilters "armeabi", "armeabi-v7a", "arm64-v8a"
-            }
         }
     }
 }

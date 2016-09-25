@@ -114,7 +114,6 @@ public class DroidguardHelper {
     private static List<KeyValuePair> getSystemInfo(Object build) {
         Class clazz = build == null ? Build.class : build.getClass();
         return Arrays.asList(
-                createSystemInfoPair("BUILD", clazz, build),
                 createSystemInfoPair("BOARD", clazz, build),
                 createSystemInfoPair("BOOTLOADER", clazz, build),
                 createSystemInfoPair("BRAND", clazz, build),
