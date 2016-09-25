@@ -4,7 +4,7 @@
           xmlns:tools="http://schemas.android.com/tools">
 
     <uses-sdk
-        android:minSdkVersion="9"
+        android:minSdkVersion="19"
         android:targetSdkVersion="24"
         tools:overrideLibrary="de.larma.arthook"/>
 
@@ -24,16 +24,6 @@
                 <action android:name="org.microg.gms.droidguard.REMOTE"/>
             </intent-filter>
         </service>
-
-        <meta-data
-            android:name="xposedmodule"
-            android:value="true"/>
-        <meta-data
-            android:name="xposeddescription"
-            android:value="Support module for DroidGuard Helper, required when XPosed is installed"/>
-        <meta-data
-            android:name="xposedminversion"
-            android:value="54"/>
     </application>
 
 </manifest>

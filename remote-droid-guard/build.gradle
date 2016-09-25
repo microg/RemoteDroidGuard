@@ -10,7 +10,6 @@ dependencies {
     compile 'com.squareup.wire:wire-runtime:1.6.1'
     compile ':droidguasso:@jar'
     compile ':arthook:@aar'
-    provided 'de.robv.android.xposed:api:82'
     compile project(':remote-droid-guard-lib')
 }
 
