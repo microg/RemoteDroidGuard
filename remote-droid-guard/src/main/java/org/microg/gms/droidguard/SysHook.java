@@ -18,11 +18,14 @@ package org.microg.gms.droidguard;
 
 import android.content.ContextWrapper;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Iterator;
+import java.util.NavigableMap;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import de.larma.arthook.$;
@@ -97,7 +100,12 @@ public class SysHook implements IXposedHookLoadPackage {
         XposedHelpers.findAndHookMethod(TreeSet.class, "iterator", new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                if (detectMapsSet(((TreeSet) param.thisObject).descendingIterator())) {
+                NavigableMap map = (NavigableMap) XposedHelpers.getObjectField(param.thisObject, "m");
+                if (map == null)
+                    map = (NavigableMap) XposedHelpers.getObjectField(param.thisObject, "backingMap");
+                if (map == null)
+                    return;
+                if (detectMapsSet(map.navigableKeySet().iterator())) {
                     param.setResult(createMapsReplacementSet().iterator());
                 }
             }
@@ -158,6 +166,7 @@ public class SysHook implements IXposedHookLoadPackage {
             }
             String s = (String) o;
             if (s.contains("org.microg.gms") && s.contains(".apk")) {
+                Log.d(TAG, "Detected maps set");
                 return true;
             }
         }
