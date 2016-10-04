@@ -65,3 +65,30 @@ void dalvik_hook_add(char *cls_name, char *mthd_name, char *sig_str, char *cls_n
   free(buf);
 }
 
+__attribute__((constructor))
+void dalvik_hook_init(void)
+{
+  LOGD("starting dalvik_hook\n");
+  dalvik_hook_resolv_dvm();
+  dalvik_hook_add("Landroid/telephony/TelephonyManager;", "getSubscriberId", "()Ljava/lang/String;",
+                  "Lorg/microg/gms/droidguard/DalvikHook;", "TelephonyManager_getSubscriberId", "(Landroid/telephony/TelephonyManager;)Ljava/lang/String;");
+  dalvik_hook_add("Landroid/telephony/TelephonyManager;", "getDeviceId", "()Ljava/lang/String;",
+                  "Lorg/microg/gms/droidguard/DalvikHook;", "TelephonyManager_getDeviceId", "(Landroid/telephony/TelephonyManager;)Ljava/lang/String;");
+  dalvik_hook_add("Landroid/net/ConnectivityManager;", "getActiveNetworkInfo", "()Landroid/net/NetworkInfo;",
+                  "Lorg/microg/gms/droidguard/DalvikHook;", "ConnectivityManager_getActiveNetworkInfo", "(Landroid/net/ConnectivityManager;)Landroid/net/NetworkInfo;");
+  dalvik_hook_add("Landroid/content/ContextWrapper;", "getPackageName", "()Ljava/lang/String;",
+                  "Lorg/microg/gms/droidguard/DalvikHook;", "ContextWrapper_getPackageName", "(Ljava/lang/Object;)Ljava/lang/String;");
+  dalvik_hook_add("Landroid/content/ContextWrapper;", "getClassLoader", "()Ljava/lang/ClassLoader;",
+                  "Lorg/microg/gms/droidguard/DalvikHook;", "ContextWrapper_getClassLoader", "(Ljava/lang/Object;)Ljava/lang/ClassLoader;");
+  dalvik_hook_add("Ljava/util/TreeSet;", "iterator", "()Ljava/util/Iterator;",
+                  "Lorg/microg/gms/droidguard/DalvikHook;", "TreeSet_iterator", "(Ljava/util/TreeSet;)Ljava/util/Iterator;");
+  /*dalvik_hook_add("Ljava/util/regex/Pattern;", "matcher", "(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;",
+                  "Lorg/microg/gms/droidguard/DalvikHook;", "Pattern_matcher", "(Ljava/util/regex/Pattern;Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;");*/
+  dalvik_hook_add("Landroid/os/SystemProperties;", "getInt", "(Ljava/lang/String;I)I",
+                  "Lorg/microg/gms/droidguard/DalvikHook;", "SystemProperties_getInt", "(Ljava/lang/String;I)I");
+  /*dalvik_hook_add("Ljava/util/Arrays;", "asList", "([Ljava/lang/Object;)Ljava/util/List;",
+                  "Lorg/microg/gms/droidguard/DalvikHook;", "Arrays_asList", "([Ljava/lang/Object;)Ljava/util/List;");*/
+  dalvik_hook_add("Landroid/app/ApplicationPackageManager;", "getSystemSharedLibraryNames", "()[Ljava/lang/String;",
+                  "Lorg/microg/gms/droidguard/DalvikHook;", "PackageManager_getSystemSharedLibraryNames", "(Ljava/lang/Object;)[Ljava/lang/String;");
+}
+
