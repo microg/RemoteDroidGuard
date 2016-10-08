@@ -88,7 +88,13 @@ public class DroidguardHelper {
         }
 
         String odexArch = context.getClassLoader().toString().contains("arm64") ? "arm64" : "arm";
-        SysHook.activate(odexArch, checksum, request.deviceId, request.subscriberId);
+        String vmVersion = System.getProperty("java.vm.version");
+        if (vmVersion != null && vmVersion.startsWith("2")) {
+            SysHook.activate(odexArch, checksum, request.deviceId, request.subscriberId);
+        }
+        else {
+            DalvikHook.activate(odexArch, checksum, request.deviceId, request.subscriberId);
+        }
         return invoke(context, clazz, request.packageName, request.reason, response.byteCode.toByteArray(), request.androidIdLong, request.extras);
     }
 
