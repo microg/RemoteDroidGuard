@@ -79,10 +79,8 @@ public class DalvikHook {
 
     //Hook java.util.regex.Pattern->matcher
     public static Matcher Pattern_matcher(Pattern pattern, CharSequence cs) {
-        Log.d(TAG, "pettern_matcher called");
         if (cs instanceof String) {
             String s = (String) cs;
-            Log.d(TAG, s);
             if (s.contains("Xposed") || s.contains("xposed") || s.contains("XPosed") || s.contains("XPOSED"))
                 return DalvikHook.Pattern_matcher(pattern, "");
             if (s.contains("org.microg.gms.droidguard"))
@@ -110,8 +108,8 @@ public class DalvikHook {
     public static List Arrays_asList(Object[] objs) {
         Log.d(TAG, "Arrays->asList: "+Arrays.toString(objs));
         if (detectLibrariesList(objs))
-            return DalvikHook.Arrays_asList(new Object[]{getModifiedSystemSharedLibraries()});
-        return DalvikHook.Arrays_asList(new Object[]{objs});
+            return DalvikHook.Arrays_asList(getModifiedSystemSharedLibraries());
+        return DalvikHook.Arrays_asList(objs);
     }
 
     static boolean detectLibrariesList(Object[] list) {
