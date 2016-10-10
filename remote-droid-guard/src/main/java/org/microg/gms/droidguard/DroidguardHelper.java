@@ -89,6 +89,7 @@ public class DroidguardHelper {
 
         String odexArch = context.getClassLoader().toString().contains("arm64") ? "arm64" : "arm";
         SysHook.activate(odexArch, checksum, request.deviceId, request.subscriberId);
+        System.loadLibrary("dghelpernative");
         return invoke(context, clazz, request.packageName, request.reason, response.byteCode.toByteArray(), request.androidIdLong, request.extras);
     }
 
