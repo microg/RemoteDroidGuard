@@ -35,12 +35,6 @@ public class RemoteDroidGuardRequest extends AutoSafeParcelable {
     @SafeParceled(3)
     public String androidIdLong;
 
-    // From TelephonyManager
-    @SafeParceled(10)
-    public String deviceId;
-    @SafeParceled(11)
-    public String subscriberId;
-
     // additional fields, known key: "contentBinding"
     @SafeParceled(100)
     public Bundle extras;

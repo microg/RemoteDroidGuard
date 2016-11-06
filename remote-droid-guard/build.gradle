@@ -9,7 +9,6 @@ repositories {
 dependencies {
     compile 'com.squareup.wire:wire-runtime:1.6.1'
     compile ':droidguasso:@jar'
-    compile ':arthook:@aar'
     compile project(':remote-droid-guard-lib')
 }
 
@@ -46,6 +45,10 @@ android {
         main {
             java.srcDirs += 'src/main/protos-java'
         }
+    }
+
+    dexOptions {
+        additionalParameters "--core-library"
     }
 }
 

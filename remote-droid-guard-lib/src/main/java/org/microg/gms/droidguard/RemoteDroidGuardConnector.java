@@ -16,7 +16,6 @@
 
 package org.microg.gms.droidguard;
 
-import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +23,6 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import java.util.concurrent.CountDownLatch;
@@ -43,13 +41,7 @@ public class RemoteDroidGuardConnector {
         return guard(type, androidIdLong, new Bundle());
     }
 
-    @SuppressLint("HardwareIds")
-    public Result guard(final String type, final String androidIdLong, final Bundle extras) {
-        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        return guard(type, androidIdLong, extras, tm.getDeviceId(), tm.getSubscriberId());
-    }
-
-    public synchronized Result guard(final String type, final String androidIdLong, final Bundle extras, final String deviceId, final String subscriberId) {
+    public synchronized Result guard(final String type, final String androidIdLong, final Bundle extras) {
         final Result res = new Result();
         res.statusCode = 14;
         connectForTask(new Task() {
@@ -61,8 +53,6 @@ public class RemoteDroidGuardConnector {
                     request.reason = type;
                     request.androidIdLong = androidIdLong;
                     request.extras = extras;
-                    request.deviceId = deviceId;
-                    request.subscriberId = subscriberId;
                     remote.guard(new IRemoteDroidGuardCallback.Stub() {
                         @Override
                         public void onResult(byte[] result) throws RemoteException {
@@ -86,6 +76,11 @@ public class RemoteDroidGuardConnector {
             }
         });
         return res;
+    }
+
+    @Deprecated
+    public Result guard(String type, String androidIdLong, Bundle extras, String id1, String id2) {
+        return guard(type, androidIdLong, extras);
     }
 
     private boolean connectForTask(Task todo) {

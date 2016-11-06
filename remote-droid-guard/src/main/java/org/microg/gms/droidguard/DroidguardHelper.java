@@ -22,7 +22,6 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 
-import com.google.android.gms.droidguard.DroidGuardChimeraService;
 import com.squareup.wire.Wire;
 
 import java.io.ByteArrayInputStream;
@@ -87,20 +86,13 @@ public class DroidguardHelper {
             clazz = loadedClass.get(checksum);
         }
 
-        String odexArch = context.getClassLoader().toString().contains("arm64") ? "arm64" : "arm";
-        SysHook.activate(odexArch, checksum, request.deviceId, request.subscriberId);
         return invoke(context, clazz, request.packageName, request.reason, response.byteCode.toByteArray(), request.androidIdLong, request.extras);
-    }
-
-    private static Context getSpecialContext(Context context) {
-        if (context.getApplicationContext() != null) context = context.getApplicationContext();
-        return new DroidGuardChimeraService(context);
     }
 
     public static byte[] invoke(Context context, Class<?> clazz, String packageName, String type, byte[] byteCode, String androidIdLong, Bundle extras) throws InstantiationException, IllegalAccessException, java.lang.reflect.InvocationTargetException, NoSuchMethodException {
         Object instance = clazz
                 .getDeclaredConstructor(Context.class, String.class, byte[].class, Object.class)
-                .newInstance(getSpecialContext(context), type, byteCode, new Callback(packageName, androidIdLong));
+                .newInstance(context, type, byteCode, new Callback(packageName, androidIdLong));
         final Map<String, String> map = new HashMap<>();
         if (extras != null) {
             for (String key : extras.keySet()) {
