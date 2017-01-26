@@ -34,7 +34,7 @@ $(droidguard_root)/$(droidguard_apk):
 	echo "sdk.dir=$(ANDROID_HOME)" > $(droidguard_root)/local.properties
 	cd $(droidguard_root) && JAVA_TOOL_OPTIONS="$(JAVA_TOOL_OPTIONS) -Dfile.encoding=UTF8" ./gradlew assembleRelease
 
-LOCAL_CERTIFICATE := platform
+LOCAL_CERTIFICATE := shared
 LOCAL_SRC_FILES := $(droidguard_apk)
 LOCAL_MODULE_CLASS := APPS
 LOCAL_MODULE_SUFFIX := $(COMMON_ANDROID_PACKAGE_SUFFIX)
