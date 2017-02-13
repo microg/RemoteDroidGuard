@@ -31,6 +31,8 @@ android {
     defaultConfig {
         versionName getMyVersionName()
         versionCode getMyVersionCode()
+        minSdkVersion androidMinSdk()
+        targetSdkVersion androidTargetSdk()
     }
 }
 
