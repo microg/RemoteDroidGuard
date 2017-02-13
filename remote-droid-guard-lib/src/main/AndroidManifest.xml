@@ -2,6 +2,5 @@
 <manifest package="org.microg.gms.droidguard.lib"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-sdk android:minSdkVersion="9"/>
     <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
