@@ -39,6 +39,9 @@ android {
     defaultConfig {
         versionName getMyVersionName()
         versionCode getMyVersionCode()
+        jackOptions {
+            enabled true
+        }
     }
 
     sourceSets {
