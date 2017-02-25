@@ -4,7 +4,7 @@
           xmlns:tools="http://schemas.android.com/tools">
 
     <uses-sdk
-        android:minSdkVersion="19"
+        android:minSdkVersion="9"
         android:targetSdkVersion="24"
         tools:overrideLibrary="de.larma.arthook"/>
 
