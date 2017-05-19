@@ -39,6 +39,8 @@ android {
     defaultConfig {
         versionName getMyVersionName()
         versionCode getMyVersionCode()
+        minSdkVersion androidMinSdk()
+        targetSdkVersion androidTargetSdk()
         jackOptions {
             enabled true
         }
@@ -48,6 +50,10 @@ android {
         main {
             java.srcDirs += 'src/main/protos-java'
         }
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
     }
 
     dexOptions {
