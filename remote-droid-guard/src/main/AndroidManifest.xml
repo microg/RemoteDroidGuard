@@ -3,17 +3,13 @@
           xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-sdk
-        android:minSdkVersion="9"
-        android:targetSdkVersion="24"
-        tools:overrideLibrary="de.larma.arthook"/>
-
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_core_service_app"
-        android:label="@string/droidguard_app_name">
+        android:label="@string/droidguard_app_name"
+        tools:ignore="GoogleAppIndexingWarning">
         <service
             android:name=".RemoteDroidGuardService"
             android:enabled="true"

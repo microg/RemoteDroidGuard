@@ -39,12 +39,18 @@ android {
     defaultConfig {
         versionName getMyVersionName()
         versionCode getMyVersionCode()
+        minSdkVersion androidMinSdk()
+        targetSdkVersion androidTargetSdk()
     }
 
     sourceSets {
         main {
             java.srcDirs += 'src/main/protos-java'
         }
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
     }
 
     dexOptions {

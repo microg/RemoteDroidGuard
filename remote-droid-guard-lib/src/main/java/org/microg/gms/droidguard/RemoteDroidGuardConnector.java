@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2016 microG Project Team
+ * Copyright (C) 2013-2017 microG Project Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ public class RemoteDroidGuardConnector {
         res.statusCode = 14;
         connectForTask(new Task() {
             @Override
-            public void run(IRemoteDroidGuard remote, final CountDownLatch countDownLatch) {
+            public void run(IRemoteDroidGuard remote, final ServiceConnection connection, final CountDownLatch countDownLatch) {
                 try {
                     RemoteDroidGuardRequest request = new RemoteDroidGuardRequest();
                     request.packageName = context.getPackageName();
@@ -59,6 +59,7 @@ public class RemoteDroidGuardConnector {
                             res.result = result;
                             res.statusCode = 0;
                             countDownLatch.countDown();
+                            context.unbindService(connection);
                         }
 
                         @Override
@@ -66,6 +67,7 @@ public class RemoteDroidGuardConnector {
                             res.statusCode = 8;
                             res.errorMsg = err;
                             countDownLatch.countDown();
+                            context.unbindService(connection);
                         }
                     }, request);
                 } catch (RemoteException e) {
@@ -97,7 +99,7 @@ public class RemoteDroidGuardConnector {
     }
 
     private interface Task {
-        void run(IRemoteDroidGuard remote, CountDownLatch countDownLatch);
+        void run(IRemoteDroidGuard remote, ServiceConnection connection, CountDownLatch countDownLatch);
     }
 
     private class Connection implements ServiceConnection {
@@ -114,7 +116,7 @@ public class RemoteDroidGuardConnector {
         public void onServiceConnected(ComponentName name, IBinder service) {
             try {
                 if (todo != null) {
-                    todo.run(IRemoteDroidGuard.Stub.asInterface(service), countDownLatch);
+                    todo.run(IRemoteDroidGuard.Stub.asInterface(service), this, countDownLatch);
                 }
                 todo = null;
             } catch (Exception e) {
