@@ -33,7 +33,7 @@ def androidCompileSdk() { return 25 }
 
 def androidTargetSdk() { return 24 }
 
-def androidMinSdk() { return 10 }
+def androidMinSdk() { return 9 }
 
 subprojects {
     group = 'org.microg'
