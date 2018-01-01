@@ -7,9 +7,9 @@ repositories {
 }
 
 dependencies {
-    compile 'com.squareup.wire:wire-runtime:1.6.1'
-    compile ':droidguasso:@jar'
-    compile project(':remote-droid-guard-lib')
+    implementation 'com.squareup.wire:wire-runtime:1.6.1'
+    implementation ':droidguasso:@jar'
+    implementation project(':remote-droid-guard-lib')
 }
 
 String getMyVersionName() {
@@ -41,19 +41,21 @@ android {
         versionCode getMyVersionCode()
         minSdkVersion androidMinSdk()
         targetSdkVersion androidTargetSdk()
-        jackOptions {
-            enabled true
-        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     sourceSets {
         main {
-            java.srcDirs += 'src/main/protos-java'
+            java.srcDirs += "src/main/protos-java"
         }
     }
 
     lintOptions {
-        disable 'InvalidPackage'
+        disable "InvalidPackage"
     }
 
     dexOptions {

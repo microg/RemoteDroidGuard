@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 dependencies {
-    compile 'org.microg:safe-parcel:1.4.0'
+    implementation 'org.microg:safe-parcel:1.4.0'
 }
 
 String getMyVersionName() {
@@ -32,6 +32,11 @@ android {
         versionName getMyVersionName()
         versionCode getMyVersionCode()
         minSdkVersion androidMinSdk()
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
