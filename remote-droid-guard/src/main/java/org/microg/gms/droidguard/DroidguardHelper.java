@@ -21,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.text.TextUtils;
 
 import com.squareup.wire.Wire;
 
@@ -111,6 +112,7 @@ public class DroidguardHelper {
                 createSystemInfoPair("BRAND", clazz, build),
                 createSystemInfoPair("CPU_ABI", clazz, build),
                 createSystemInfoPair("CPU_ABI2", clazz, build),
+                createSystemInfoPair("SUPPORTED_ABIS", clazz, build),
                 createSystemInfoPair("DEVICE", clazz, build),
                 createSystemInfoPair("DISPLAY", clazz, build),
                 createSystemInfoPair("FINGERPRINT", clazz, build),
@@ -157,7 +159,11 @@ public class DroidguardHelper {
                 }
             }
             String nuKey = tr[tr.length - 1];
-            return new KeyValuePair(nuKey, String.valueOf(nuClass.getField(nuKey).get(nuObj)));
+            Object val = nuClass.getField(nuKey).get(nuObj);
+            if (val instanceof String[])
+              return new KeyValuePair(nuKey, TextUtils.join(",", (String[]) val));
+            else
+              return new KeyValuePair(nuKey, String.valueOf(val));
         } catch (Exception e) {
             if (obj != null) {
                 // fallback to real system info
