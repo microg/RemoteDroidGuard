@@ -65,7 +65,7 @@ public class DroidguardHelper {
                 .isGoogleCn(false)
                 .enableInlineVm(true)
                 .currentVersion(3)
-                .versionNamePrefix(Constants.GMS_VERSION_NAME_PREFIX)
+                .versionNamePrefix(gmsVersionNamePrefix(Build.CPU_ABI))
                 .cached(getCached(context))
                 .arch(getArch())
                 .build());
@@ -88,6 +88,31 @@ public class DroidguardHelper {
         }
 
         return invoke(context, clazz, request.packageName, request.reason, response.byteCode.toByteArray(), request.androidIdLong, request.extras);
+    }
+
+    public static int gmsVersionCode(String arch) {
+        switch (arch) {
+            case "arm64-v8a":
+                return 12688023;
+            case "x86":
+                return 12688026;
+            case "x86_64":
+                return 12688027;
+            default:
+                return 12688019;
+        }
+    }
+
+    public static String gmsVersionNamePrefix(String arch) {
+        switch (arch) {
+            case "arm64-v8a":
+                return "12.6.88 (040400-{{cl}})";
+            case "x86":
+            case "x86_64":
+                return "12.6.88 (040700-{{cl}})";
+            default:
+                return "12.6.88 (040300-{{cl}})";
+        }
     }
 
     public static byte[] invoke(Context context, Class<?> clazz, String packageName, String type, byte[] byteCode, String androidIdLong, Bundle extras) throws InstantiationException, IllegalAccessException, java.lang.reflect.InvocationTargetException, NoSuchMethodException {
@@ -253,7 +278,7 @@ public class DroidguardHelper {
         connection.setDoOutput(true);
         connection.setRequestProperty("Content-Type", "application/x-protobuf");
         connection.setRequestProperty("Accept-Encoding", "gzip");
-        connection.setRequestProperty("User-Agent", "DroidGuard/" + Constants.GMS_VERSION_CODE);
+        connection.setRequestProperty("User-Agent", "DroidGuard/" + gmsVersionCode(Build.CPU_ABI));
 
         Log.d(TAG, "-- Request --\n" + request);
         OutputStream os = connection.getOutputStream();
