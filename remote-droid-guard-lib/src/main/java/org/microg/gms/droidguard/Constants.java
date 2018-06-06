@@ -18,6 +18,6 @@ package org.microg.gms.droidguard;
 
 public class Constants {
     public static final String GMS_PACKAGE_NAME = "com.google.android.gms";
-    public static final int GMS_VERSION_CODE = 12688019;
-    public static final String GMS_VERSION_NAME_PREFIX = "12.6.88 (040300-{{cl}})";
+    public static final int GMS_VERSION_CODE = 12688023;
+    public static final String GMS_VERSION_NAME_PREFIX = "12.6.88 (040400-{{cl}})";
 }
