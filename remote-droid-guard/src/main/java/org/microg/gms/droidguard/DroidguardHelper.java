@@ -59,16 +59,19 @@ public class DroidguardHelper {
     private static Map<String, Class<?>> loadedClass = new HashMap<>();
 
     public static byte[] guard(Context context, RemoteDroidGuardRequest request) throws Exception {
+        int versionCode = context.getPackageManager().getPackageInfo("com.google.android.gms", 0).versionCode;
+
         SignedDGResponse signedResponse = request(new DGRequest.Builder()
                 .usage(new DGUsage(request.reason, request.packageName))
                 .info(getSystemInfo(null))
                 .isGoogleCn(false)
                 .enableInlineVm(true)
                 .currentVersion(3)
-                .versionNamePrefix(gmsVersionNamePrefix(Build.CPU_ABI))
+                .versionNamePrefix(gmsVersionNamePrefix(versionCode, Build.CPU_ABI))
                 .cached(getCached(context))
                 .arch(getArch())
-                .build());
+                .build(),
+                versionCode);
         DGResponse response = new Wire().parseFrom(signedResponse.data.toByteArray(), DGResponse.class);
         String checksum = response.vmChecksum.hex();
         File dgCacheDir = context.getDir("dg_cache", 0);
@@ -90,28 +93,36 @@ public class DroidguardHelper {
         return invoke(context, clazz, request.packageName, request.reason, response.byteCode.toByteArray(), request.androidIdLong, request.extras);
     }
 
-    public static int gmsVersionCode(String arch) {
+    public static int gmsVersionCode(int versionCode, String arch) {
+        versionCode -= versionCode % 1000;
         switch (arch) {
             case "arm64-v8a":
-                return 12688023;
+                return versionCode + 23;
             case "x86":
-                return 12688026;
+                return versionCode + 26;
             case "x86_64":
-                return 12688027;
+                return versionCode + 27;
             default:
-                return 12688019;
+                return versionCode + 19;
         }
     }
 
-    public static String gmsVersionNamePrefix(String arch) {
+    public static String gmsVersionNamePrefix(int versionCode, String arch) {
+        int minor, patch;
+        versionCode /= 1000;
+        patch = versionCode % 100;
+        versionCode /= 100;
+        minor = versionCode % 10;
+        versionCode /= 10;
+        String versionPrefix = versionCode + "." + minor + "." + patch;
         switch (arch) {
             case "arm64-v8a":
-                return "12.6.88 (040400-{{cl}})";
+                return versionPrefix + " (040400-{{cl}})";
             case "x86":
             case "x86_64":
-                return "12.6.88 (040700-{{cl}})";
+                return versionPrefix + " (040700-{{cl}})";
             default:
-                return "12.6.88 (040300-{{cl}})";
+                return versionPrefix + " (040300-{{cl}})";
         }
     }
 
@@ -271,14 +282,14 @@ public class DroidguardHelper {
         }
     }
 
-    private static SignedDGResponse request(DGRequest request) throws IOException {
+    private static SignedDGResponse request(DGRequest request, int versionCode) throws IOException {
         HttpURLConnection connection = (HttpURLConnection) new URL(DG_URL).openConnection();
         connection.setRequestMethod("POST");
         connection.setDoInput(true);
         connection.setDoOutput(true);
         connection.setRequestProperty("Content-Type", "application/x-protobuf");
         connection.setRequestProperty("Accept-Encoding", "gzip");
-        connection.setRequestProperty("User-Agent", "DroidGuard/" + gmsVersionCode(Build.CPU_ABI));
+        connection.setRequestProperty("User-Agent", "DroidGuard/" + gmsVersionCode(versionCode, Build.CPU_ABI));
 
         Log.d(TAG, "-- Request --\n" + request);
         OutputStream os = connection.getOutputStream();
