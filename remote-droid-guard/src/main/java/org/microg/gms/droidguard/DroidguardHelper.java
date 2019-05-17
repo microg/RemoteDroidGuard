@@ -59,7 +59,7 @@ public class DroidguardHelper {
     private static Map<String, Class<?>> loadedClass = new HashMap<>();
 
     public static byte[] guard(Context context, RemoteDroidGuardRequest request) throws Exception {
-        int versionCode = context.getPackageManager().getPackageInfo("com.google.android.gms", 0).versionCode;
+        int versionCode = context.getPackageManager().getPackageInfo(Constants.GMS_PACKAGE_NAME, 0).versionCode;
 
         SignedDGResponse signedResponse = request(new DGRequest.Builder()
                 .usage(new DGUsage(request.reason, request.packageName))
