@@ -94,7 +94,7 @@ public class RemoteDroidGuardConnector {
         Connection c = new Connection(countDownLatch, todo);
 
         try {
-            if (!context.bindService(intent, c, Context.BIND_AUTO_CREATE) {
+            if (!context.bindService(intent, c, Context.BIND_AUTO_CREATE)) {
                 return false;
             }
         } catch (SecurityException e) {
