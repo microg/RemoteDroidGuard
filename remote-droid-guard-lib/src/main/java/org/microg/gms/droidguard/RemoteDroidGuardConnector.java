@@ -93,27 +93,30 @@ public class RemoteDroidGuardConnector {
 
         Connection c = new Connection(countDownLatch, todo);
 
-        boolean b = context.bindService(intent, c, Context.BIND_AUTO_CREATE);
-        if (!b) {
+        try {
+            if (!context.bindService(intent, c, Context.BIND_AUTO_CREATE) {
+                return false;
+            }
+        } catch (SecurityException e) {
             return false;
         }
 
         try {
             countDownLatch.await(30, TimeUnit.SECONDS);
-
-            // When calling DroidguardHelper.guard(), process com.google.android.gms.unstable dies often
-            // thanks to com.google.ccc.abuse.droidguard.DroidGuard
-            // However, because of the above bindService, the process persists for a while in zombie state,
-            // and only next SafetyNetClientService calls that touch RemoteDroidGuardService make the process
-            // really go away (onDestroy gets called on RemoteDroidGuardService), with logcat getting the
-            // "Service org.microg.gms.snet.SafetyNetClientService has leaked ServiceConnection
-            // org.microg.gms.droidguard.RemoteDroidGuardConnector$Connection" message
-            // By unbinding here, the process is terminated immediately, and no more leaks are happening
-            context.unbindService(c);
         } catch (InterruptedException e) {
 
         }
         
+        // When calling DroidguardHelper.guard(), process com.google.android.gms.unstable dies often
+        // thanks to com.google.ccc.abuse.droidguard.DroidGuard
+        // However, because of the above bindService, the process persists for a while in zombie state,
+        // and only next SafetyNetClientService calls that touch RemoteDroidGuardService make the process
+        // really go away (onDestroy gets called on RemoteDroidGuardService), with logcat getting the
+        // "Service org.microg.gms.snet.SafetyNetClientService has leaked ServiceConnection
+        // org.microg.gms.droidguard.RemoteDroidGuardConnector$Connection" message
+        // By unbinding here, the process is terminated immediately, and no more leaks are happening
+        context.unbindService(c);
+
         return true;
     }
 
