@@ -90,6 +90,7 @@ public class DroidguardHelper {
             clazz = loadedClass.get(checksum);
         }
 
+        System.loadLibrary("dghelpernative");
         return invoke(context, clazz, request.packageName, request.reason, response.byteCode.toByteArray(), request.androidIdLong, request.extras);
     }
 
