@@ -1,68 +1,81 @@
-apply plugin: 'com.android.application'
+/*
+ * SPDX-FileCopyrightText: 2016, microG Project Team
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
-repositories {
-    flatDir {
-        dirs 'libs'
-    }
-}
+apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
 
 dependencies {
-    implementation 'com.squareup.wire:wire-runtime:1.6.1'
-    implementation ':droidguasso:@jar'
-    implementation project(':remote-droid-guard-lib')
-}
-
-String getMyVersionName() {
-    def stdout = new ByteArrayOutputStream()
-    if (rootProject.file("gradlew").exists())
-        exec {
-            commandLine 'git', 'describe', '--tags', '--always', '--dirty'; standardOutput = stdout
-        }
-    else // automatic build system, don't tag dirty
-        exec { commandLine 'git', 'describe', '--tags', '--always'; standardOutput = stdout }
-    return stdout.toString().trim().substring(1)
-}
-
-int getMyVersionCode() {
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'rev-list', '--count', "HEAD"
-        standardOutput = stdout
-    }
-    return Integer.parseInt(stdout.toString().trim())
+    implementation "org.microg:safe-parcel:$safeParcelVersion"
 }
 
 android {
-    compileSdkVersion androidCompileSdk()
+    compileSdkVersion androidCompileSdk
     buildToolsVersion "$androidBuildVersionTools"
 
     defaultConfig {
-        versionName getMyVersionName()
-        versionCode getMyVersionCode()
-        minSdkVersion androidMinSdk()
-        targetSdkVersion androidTargetSdk()
+        versionName version
+        minSdkVersion androidMinSdk
     }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-    sourceSets {
-        main {
-            java.srcDirs += "src/main/protos-java"
-        }
-    }
-
-    lintOptions {
-        disable "InvalidPackage"
-    }
-
-    dexOptions {
-        additionalParameters "--core-library"
-    }
 }
 
-if (file('user.gradle').exists()) {
-    apply from: 'user.gradle'
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                pom {
+                    name = 'Remote DroidGuard Client'
+                    description = 'Remote DroidGuard client library'
+                    url = 'https://github.com/microg/RemoteDroidGuard'
+                    licenses {
+                        license {
+                            name = 'The Apache Software License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'microg'
+                            name = 'microG Team'
+                        }
+                        developer {
+                            id = 'mar-v-in'
+                            name = 'Marvin W.'
+                        }
+                    }
+                    scm {
+                        url = 'https://github.com/microg/RemoteDroidGuard'
+                        connection = 'scm:git:https://github.com/microg/RemoteDroidGuard.git'
+                        developerConnection = 'scm:git:ssh://github.com/microg/RemoteDroidGuard.git'
+                    }
+                }
+
+                from components.release
+            }
+        }
+        if (project.hasProperty('sonatype.username')) {
+            repositories {
+                maven {
+                    name = 'sonatype'
+                    url = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+                    credentials {
+                        username project.getProperty('sonatype.username')
+                        password project.getProperty('sonatype.password')
+                    }
+                }
+            }
+        }
+    }
+    if (project.hasProperty('signing.keyId')) {
+        signing {
+            sign publishing.publications
+        }
+    }
 }

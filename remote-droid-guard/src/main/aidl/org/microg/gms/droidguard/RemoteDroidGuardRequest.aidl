@@ -3,5 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-include ':app'
-include ':remote-droid-guard'
+package org.microg.gms.droidguard;
+
+parcelable RemoteDroidGuardRequest;
