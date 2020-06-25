@@ -11,6 +11,8 @@ dependencies {
     implementation "org.microg:safe-parcel:$safeParcelVersion"
 }
 
+group = 'org.microg.gms'
+
 android {
     compileSdkVersion androidCompileSdk
     buildToolsVersion "$androidBuildVersionTools"

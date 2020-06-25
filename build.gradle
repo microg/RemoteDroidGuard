@@ -46,7 +46,6 @@ int gitCountCommits() {
 allprojects {
     apply plugin: 'idea'
 
-    group = 'org.microg'
     version = gitDescribeVersion()
     ext.appVersionCode = gitCountCommits()
 }
