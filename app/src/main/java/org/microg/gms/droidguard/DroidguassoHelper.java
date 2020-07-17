@@ -6,7 +6,6 @@
 package org.microg.gms.droidguard;
 
 import com.google.ccc.abuse.droidguard.droidguasso.Droidguasso;
-import com.google.ccc.abuse.droidguard.droidguasso.DroidguassoException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,7 +33,7 @@ public class DroidguassoHelper {
      * @param digest A digest array to feed into DroidGuasso
      * @return DroidGuasso output data to further process
      */
-    public static byte[] guasso(byte[] digest) throws DroidguassoException {
+    public static byte[] guasso(byte[] digest) {
         List<String> substrs = new ArrayList<>();
         addFilesInPath("/vendor/lib/egl", substrs); //Hashing all EGL libs in /vendor
         addFilesInPath("/system/lib/egl", substrs); //Hashing all EGL libs in /system

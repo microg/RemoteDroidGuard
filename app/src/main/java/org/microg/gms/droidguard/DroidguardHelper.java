@@ -6,13 +6,13 @@
 package org.microg.gms.droidguard;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
-import android.text.TextUtils;
 
-import com.google.ccc.abuse.droidguard.droidguasso.DroidguassoException;
 import com.squareup.wire.Wire;
 
 import java.io.ByteArrayInputStream;
@@ -51,16 +51,18 @@ public class DroidguardHelper {
     public static byte[] guard(Context context, RemoteDroidGuardRequest request) throws Exception {
         int versionCode = context.getPackageManager().getPackageInfo(Constants.GMS_PACKAGE_NAME, 0).versionCode;
 
+        createDB(context);
+
         SignedDGResponse signedResponse = request(new DGRequest.Builder()
-                .usage(new DGUsage(request.reason, request.packageName))
-                .info(getSystemInfo(null))
-                .isGoogleCn(false)
-                .enableInlineVm(true)
-                .currentVersion(3)
-                .versionNamePrefix(gmsVersionNamePrefix(versionCode, Build.CPU_ABI))
-                .cached(getCached(context))
-                .arch(getArch())
-                .build(),
+                        .usage(new DGUsage(request.reason, request.packageName))
+                        .info(getSystemInfo(null))
+                        .isGoogleCn(false)
+                        .enableInlineVm(true)
+                        .currentVersion(3)
+                        .versionNamePrefix(gmsVersionNamePrefix(versionCode, Build.CPU_ABI))
+                        .cached(getCached(context))
+                        .arch(getArch())
+                        .build(),
                 versionCode);
         DGResponse response = new Wire().parseFrom(signedResponse.data.toByteArray(), DGResponse.class);
         String checksum = response.vmChecksum.hex();
@@ -81,6 +83,19 @@ public class DroidguardHelper {
         }
 
         return invoke(context, clazz, request.packageName, request.reason, response.byteCode.toByteArray(), request.androidIdLong, request.extras);
+    }
+
+    private static void createDB(Context context) {
+        File dbFile = context.getDatabasePath("dg.db");
+        if (dbFile.exists()) return;
+        else {
+            SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(dbFile.getAbsolutePath(), null);
+            db.execSQL("CREATE TABLE main (a TEXT NOT NULL, b LONG NOT NULL, c LONG NOT NULL, d TEXT NON NULL, e TEXT NON NULL,f BLOB NOT NULL,g BLOB NOT NULL)");
+            db.beginTransaction();
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
+        }
     }
 
     public static int gmsVersionCode(int versionCode, String arch) {
@@ -187,9 +202,9 @@ public class DroidguardHelper {
             String nuKey = tr[tr.length - 1];
             Object val = nuClass.getField(nuKey).get(nuObj);
             if (val instanceof String[])
-              return new KeyValuePair(nuKey, TextUtils.join(",", (String[]) val));
+                return new KeyValuePair(nuKey, TextUtils.join(",", (String[]) val));
             else
-              return new KeyValuePair(nuKey, String.valueOf(val));
+                return new KeyValuePair(nuKey, String.valueOf(val));
         } catch (Exception e) {
             if (obj != null) {
                 // fallback to real system info
@@ -343,12 +358,7 @@ public class DroidguardHelper {
 
         public final String a(final byte[] array) {
             String guasso = null;
-            try {
-                guasso = new String(DroidguassoHelper.guasso(array));
-            } catch (DroidguassoException e) {
-                Log.e("Error %s", e.getMessage());
-                e.printStackTrace();
-            }
+            guasso = new String(DroidguassoHelper.guasso(array));
             Log.d(TAG, "a: " + Base64.encodeToString(array, Base64.NO_WRAP) + " -> " + guasso);
             return guasso;
         }
