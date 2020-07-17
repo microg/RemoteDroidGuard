@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ SPDX-FileCopyrightText: 2016, microG Project Team
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<manifest package="org.microg.gms.droidguard"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_core_service_app"
+        android:label="@string/droidguard_app_name"
+        tools:ignore="GoogleAppIndexingWarning">
+        <service
+            android:name=".RemoteDroidGuardService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.INTERNET"
+            android:process="com.google.android.gms.unstable">
+            <intent-filter>
+                <action android:name="org.microg.gms.droidguard.REMOTE"/>
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>

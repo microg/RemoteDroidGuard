@@ -1,0 +1,9 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+
+Files: app/src/main/protos-java/*
+Copyright: 2016, microG Project Team. Automatically generated from .proto file
+License: Apache-2.0
+
+Files: app/src/main/res/mipmap-*/*.png
+Copyright: 2016, microG Project Team
+License: CC-BY-SA-4.0

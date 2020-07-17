@@ -1,0 +1,49 @@
+/*
+ * SPDX-FileCopyrightText: 2016, microG Project Team
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+apply plugin: 'com.android.application'
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    implementation "com.squareup.wire:wire-runtime:$wireVersion"
+    implementation ':droidguasso:@jar'
+    implementation project(':remote-droid-guard')
+}
+
+android {
+    compileSdkVersion androidCompileSdk
+    buildToolsVersion "$androidBuildVersionTools"
+
+    defaultConfig {
+        versionName version
+        versionCode appVersionCode
+        minSdkVersion androidMinSdk
+        targetSdkVersion androidTargetSdk
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs += "src/main/protos-java"
+        }
+    }
+
+    lintOptions {
+        disable "InvalidPackage"
+    }
+
+    dexOptions {
+        additionalParameters "--core-library"
+    }
+}
