@@ -12,6 +12,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.text.TextUtils;
 
+import com.google.ccc.abuse.droidguard.droidguasso.DroidguassoException;
 import com.squareup.wire.Wire;
 
 import java.io.ByteArrayInputStream;
@@ -341,7 +342,13 @@ public class DroidguardHelper {
         }
 
         public final String a(final byte[] array) {
-            String guasso = new String(DroidguassoHelper.guasso(array));
+            String guasso = null;
+            try {
+                guasso = new String(DroidguassoHelper.guasso(array));
+            } catch (DroidguassoException e) {
+                Log.e("Error %s", e.getMessage());
+                e.printStackTrace();
+            }
             Log.d(TAG, "a: " + Base64.encodeToString(array, Base64.NO_WRAP) + " -> " + guasso);
             return guasso;
         }
