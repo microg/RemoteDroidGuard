@@ -104,7 +104,10 @@ public class RemoteDroidGuardConnector {
         // "Service org.microg.gms.snet.SafetyNetClientService has leaked ServiceConnection
         // org.microg.gms.droidguard.RemoteDroidGuardConnector$Connection" message
         // By unbinding here, the process is terminated immediately, and no more leaks are happening
-        context.unbindService(c);
+        try {
+            context.unbindService(c);
+        } catch (Exception ignored) {
+        }
 
         return true;
     }
