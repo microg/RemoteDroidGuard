@@ -25,7 +25,7 @@ public class RemoteDroidGuardService extends Service {
                     @Override
                     public void run() {
                         try {
-                            callback.onResult(DroidguardHelper.guard(RemoteDroidGuardService.this, request));
+                            callback.onResult(DroidGuardHelper.guard(RemoteDroidGuardService.this, request));
                         } catch (Exception e) {
                             Log.w(TAG, e);
                             try {

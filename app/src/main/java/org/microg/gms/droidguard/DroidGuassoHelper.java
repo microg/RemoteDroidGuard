@@ -20,18 +20,27 @@ import java.util.List;
 
 import okio.ByteString;
 
-public class DroidguassoHelper {
-    private static final String TAG = "GmsDroidguassoHelper";
+/**
+ * DroidGuasso helper class. It hashes some files up to a size of 1024 bytes and feeds them with a digest into DroidGuasso
+ */
+public class DroidGuassoHelper {
+    private static final String TAG = "GmsDroidGuassoHelper";
 
     private char[] HEX_CHARS = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
+    /**
+     * Makes a call to DroidGuasso.
+     *
+     * @param digest A digest array to feed into DroidGuasso
+     * @return DroidGuasso output data to further process
+     */
     public static byte[] guasso(byte[] digest) {
         List<String> substrs = new ArrayList<>();
-        addFilesInPath("/vendor/lib/egl", substrs);
-        addFilesInPath("/system/lib/egl", substrs);
+        addFilesInPath("/vendor/lib/egl", substrs); //Hashing all EGL libs in /vendor
+        addFilesInPath("/system/lib/egl", substrs); //Hashing all EGL libs in /system
         Collections.sort(substrs);
-        substrs.add(initialBytesDigest(new File("/system/lib/egl/egl.cfg")));
-        String eglInfo = hexDigest(substrs.toString().getBytes());
+        substrs.add(initialBytesDigest(new File("/system/lib/egl/egl.cfg"))); //Hashing the EGL config
+        String eglInfo = hexDigest(substrs.toString().getBytes()); //SHA-1 hashing the toString() of an object?
 
 
         float[] floats = new float[]{0.35502917f, 0.47196686f, 0.24689609f, 0.66850024f, 0.7746259f, 0.5967446f, 0.06270856f, 0.19201201f, 0.35090452f, 0.5573558f, 0.470259f, 0.9866341f};
@@ -48,6 +57,12 @@ public class DroidguassoHelper {
         return ("5=" + eglInfo + "\n7=" + dg.getGpu() + "\n8=" + dg.getHash1() + "\n9=" + dg.getHash2() + "\n").getBytes();
     }
 
+    /**
+     * SHA-1 hashes file contents. Max size is 1024 bytes.
+     *
+     * @param file A file object which contents to hash
+     * @return Returns the hash
+     */
     private static String initialBytesDigest(File file) {
         try {
             FileInputStream is = new FileInputStream(file);
@@ -60,6 +75,12 @@ public class DroidguassoHelper {
         }
     }
 
+    /**
+     * SHA-1 hashes an byte array
+     *
+     * @param bytes Bytes to hash
+     * @return Returns the hash
+     */
     private static String hexDigest(byte[] bytes) {
         try {
             return ByteString.of(MessageDigest.getInstance("SHA-1").digest(bytes)).hex();
@@ -68,15 +89,18 @@ public class DroidguassoHelper {
         }
     }
 
+    /**
+     * Finds ".so" files in a directory and adds their SHA-1 hashed content to a given {@link List} object.
+     * Representation in the list as follows:
+     * {@literal <filename>/<file_length>/<contents_hash>}
+     *
+     * @param path the parent directory to search for ".so" files
+     * @param list the list to add the
+     */
     private static void addFilesInPath(String path, List list) {
         final File parent = new File(path);
         if (parent.isDirectory()) {
-            final File[] listFiles = parent.listFiles(new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String filename) {
-                    return filename.endsWith(".so");
-                }
-            });
+            final File[] listFiles = parent.listFiles((dir, filename) -> filename.endsWith(".so"));
             for (File file : listFiles) {
                 list.add(file.getName() + "/" + file.length() + "/" + initialBytesDigest(file));
             }
