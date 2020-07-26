@@ -9,3 +9,5 @@ build/
 user.gradle
 local.properties
 .directory
+.idea/
+/scripts/decrypt.class
