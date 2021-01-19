@@ -14,6 +14,7 @@ repositories {
 dependencies {
     implementation "com.squareup.wire:wire-runtime:$wireVersion"
     implementation ':droidguasso:@jar'
+    implementation project(':proto')
     implementation project(':remote-droid-guard')
 }
 
@@ -33,12 +34,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    sourceSets {
-        main {
-            java.srcDirs += "src/main/protos-java"
-        }
-    }
-
     lintOptions {
         disable "InvalidPackage"
     }
@@ -46,4 +41,8 @@ android {
     dexOptions {
         additionalParameters "--core-library"
     }
+}
+
+if (file('user.gradle').exists()) {
+    apply from: 'user.gradle'
 }

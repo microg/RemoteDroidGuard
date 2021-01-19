@@ -12,8 +12,6 @@ import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 
-import com.squareup.wire.Wire;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -54,7 +52,7 @@ public class DroidGuardHelper {
         new DroidGuardDatabase(context).getReadableDatabase().close();
 
         SignedDGResponse signedResponse = request(new DGRequest.Builder()
-                        .usage(new DGUsage(request.reason, request.packageName))
+                        .usage(new DGUsage(request.reason, request.packageName, ByteString.EMPTY))
                         .info(getSystemInfo(null))
                         .isGoogleCn(false)
                         .enableInlineVm(true)
@@ -64,7 +62,7 @@ public class DroidGuardHelper {
                         .arch(getArch())
                         .build(),
                 versionCode);
-        DGResponse response = new Wire().parseFrom(signedResponse.data.toByteArray(), DGResponse.class);
+        DGResponse response = DGResponse.ADAPTER.decode(signedResponse.data.toByteArray());
         String checksum = response.vmChecksum.hex();
         File dgCacheDir = context.getDir("dg_cache", 0);
         File dgDir = new File(dgCacheDir, checksum);
@@ -189,16 +187,16 @@ public class DroidGuardHelper {
             String nuKey = tr[tr.length - 1];
             Object val = nuClass.getField(nuKey).get(nuObj);
             if (val instanceof String[])
-                return new KeyValuePair(nuKey, TextUtils.join(",", (String[]) val));
+                return new KeyValuePair(nuKey, TextUtils.join(",", (String[]) val), ByteString.EMPTY);
             else
-                return new KeyValuePair(nuKey, String.valueOf(val));
+                return new KeyValuePair(nuKey, String.valueOf(val), ByteString.EMPTY);
         } catch (Exception e) {
             if (obj != null) {
                 // fallback to real system info
                 return createSystemInfoPair(key, Build.class, null);
             }
             Log.w(TAG, e);
-            return new KeyValuePair(key, "unknown");
+            return new KeyValuePair(key, "unknown", ByteString.EMPTY);
         }
     }
 
@@ -285,7 +283,7 @@ public class DroidGuardHelper {
 
         Log.d(TAG, "-- Request --\n" + request);
         OutputStream os = connection.getOutputStream();
-        os.write(request.toByteArray());
+        os.write(request.encode());
         os.close();
 
         if (connection.getResponseCode() != 200) {
@@ -304,7 +302,7 @@ public class DroidGuardHelper {
         }
 
         InputStream is = connection.getInputStream();
-        SignedDGResponse response = new Wire().parseFrom(new GZIPInputStream(is), SignedDGResponse.class);
+        SignedDGResponse response = SignedDGResponse.ADAPTER.decode(new GZIPInputStream(is));
         is.close();
         return response;
     }
